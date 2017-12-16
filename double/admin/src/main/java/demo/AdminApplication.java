@@ -3,7 +3,6 @@ package demo;
 import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class AdminApplication {
 
+  public static void main(String[] args) {
+    SpringApplication.run(AdminApplication.class, args);
+  }
+
   @GetMapping(value = "/{path:[^\\.]*}")
   public String redirect() {
     return "forward:/";
@@ -33,12 +36,9 @@ public class AdminApplication {
     return map;
   }
 
-  public static void main(String[] args) {
-    SpringApplication.run(AdminApplication.class, args);
-  }
-
   @Configuration
   protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
       // @formatter:off

@@ -2,7 +2,6 @@ package demo;
 
 import java.security.KeyPair;
 import java.security.Principal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,32 +34,32 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableResourceServer
 public class AuthserverApplication extends WebMvcConfigurerAdapter {
 
-	@RequestMapping("/user")
-	@ResponseBody
-	public Principal user(Principal user) {
-		return user;
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(AuthserverApplication.class, args);
+  }
 
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/login").setViewName("login");
-		registry.addViewController("/oauth/confirm_access").setViewName("authorize");
-	}
+  @RequestMapping("/user")
+  @ResponseBody
+  public Principal user(Principal user) {
+    return user;
+  }
 
-	public static void main(String[] args) {
-		SpringApplication.run(AuthserverApplication.class, args);
-	}
+  @Override
+  public void addViewControllers(ViewControllerRegistry registry) {
+    registry.addViewController("/login").setViewName("login");
+    registry.addViewController("/oauth/confirm_access").setViewName("authorize");
+  }
 
-	@Configuration
-	@Order(-20)
-	protected static class LoginConfig extends WebSecurityConfigurerAdapter {
+  @Configuration
+  @Order(-20)
+  protected static class LoginConfig extends WebSecurityConfigurerAdapter {
 
-		@Autowired
-		private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			// @formatter:off
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      // @formatter:off
 			http
 				.formLogin().loginPage("/login").permitAll()
 			.and()
@@ -68,54 +67,54 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 			.and()
 				.authorizeRequests().anyRequest().authenticated();
 			// @formatter:on
-		}
+    }
 
-		@Override
-		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-			auth.parentAuthenticationManager(authenticationManager);
-		}
-	}
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      auth.parentAuthenticationManager(authenticationManager);
+    }
+  }
 
-	@Configuration
-	@EnableAuthorizationServer
-	protected static class OAuth2AuthorizationConfig extends
-			AuthorizationServerConfigurerAdapter {
+  @Configuration
+  @EnableAuthorizationServer
+  protected static class OAuth2AuthorizationConfig extends
+      AuthorizationServerConfigurerAdapter {
 
-		@Autowired
-		private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-		@Bean
-		public JwtAccessTokenConverter jwtAccessTokenConverter() {
-			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-			KeyPair keyPair = new KeyStoreKeyFactory(
-					new ClassPathResource("keystore.jks"), "foobar".toCharArray())
-					.getKeyPair("test");
-			converter.setKeyPair(keyPair);
-			return converter;
-		}
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+      JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+      KeyPair keyPair = new KeyStoreKeyFactory(
+          new ClassPathResource("keystore.jks"), "foobar".toCharArray())
+          .getKeyPair("test");
+      converter.setKeyPair(keyPair);
+      return converter;
+    }
 
-		@Override
-		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-			clients.inMemory()
-					.withClient("acme")
-					.secret("acmesecret")
-					.authorizedGrantTypes("authorization_code", "refresh_token",
-							"password").scopes("openid");
-		}
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+      clients.inMemory()
+          .withClient("acme")
+          .secret("acmesecret")
+          .authorizedGrantTypes("authorization_code", "refresh_token",
+              "password").scopes("openid");
+    }
 
-		@Override
-		public void configure(AuthorizationServerEndpointsConfigurer endpoints)
-				throws Exception {
-			endpoints.authenticationManager(authenticationManager).accessTokenConverter(
-					jwtAccessTokenConverter());
-		}
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints)
+        throws Exception {
+      endpoints.authenticationManager(authenticationManager).accessTokenConverter(
+          jwtAccessTokenConverter());
+    }
 
-		@Override
-		public void configure(AuthorizationServerSecurityConfigurer oauthServer)
-				throws Exception {
-			oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess(
-					"isAuthenticated()");
-		}
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer)
+        throws Exception {
+      oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess(
+          "isAuthenticated()");
+    }
 
-	}
+  }
 }

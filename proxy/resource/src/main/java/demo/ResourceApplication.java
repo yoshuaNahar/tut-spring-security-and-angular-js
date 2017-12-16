@@ -1,7 +1,6 @@
 package demo;
 
 import java.util.UUID;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,39 +12,40 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ResourceApplication extends WebSecurityConfigurerAdapter {
 
-	@RequestMapping("/")
-	public Message home() {
-		return new Message("Hello World");
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(ResourceApplication.class, args);
+  }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.httpBasic().disable();
-		http.authorizeRequests().anyRequest().authenticated();
-	}
+  @RequestMapping("/")
+  public Message home() {
+    return new Message("Hello World");
+  }
 
-	public static void main(String[] args) {
-		SpringApplication.run(ResourceApplication.class, args);
-	}
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.httpBasic().disable();
+    http.authorizeRequests().anyRequest().authenticated();
+  }
 
 }
 
 class Message {
-	private String id = UUID.randomUUID().toString();
-	private String content;
 
-	Message() {
-	}
+  private String id = UUID.randomUUID().toString();
+  private String content;
 
-	public Message(String content) {
-		this.content = content;
-	}
+  Message() {
+  }
 
-	public String getId() {
-		return id;
-	}
+  public Message(String content) {
+    this.content = content;
+  }
 
-	public String getContent() {
-		return content;
-	}
+  public String getId() {
+    return id;
+  }
+
+  public String getContent() {
+    return content;
+  }
 }

@@ -3,7 +3,6 @@ package demo;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -20,9 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class UiApplication {
 
+  public static void main(String[] args) {
+    SpringApplication.run(UiApplication.class, args);
+  }
+
   @GetMapping(value = "/{path:[^\\.]*}")
   public String redirect() {
-      return "forward:/";
+    return "forward:/";
   }
 
   @RequestMapping("/user")
@@ -31,13 +34,10 @@ public class UiApplication {
     return Collections.singletonMap("name", user.getName());
   }
 
-  public static void main(String[] args) {
-    SpringApplication.run(UiApplication.class, args);
-  }
-
   @Configuration
   @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
   protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
       // @formatter:off

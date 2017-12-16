@@ -2,13 +2,7 @@ Demo samples for http://angularjs.org[Angular JS] with http://projects.spring.io
 
 All samples have the same basic functionality: a secure static, single-page application, which renders content from a secure backend JSON resource. Blogs are in READMEs of individual projects, and also on the http://spring.io.blog[Spring Blog]. Also some summary slides here: http://presos.dsyer.com/decks/security-micro-clients.html[http://presos.dsyer.com/decks/security-micro-clients.html] (so far minimal).
 
-image:https://badges.gitter.im/Join%20Chat.svg[Gitter,link=https://gitter.im/dsyer/spring-security-angular?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge]
-
 Contents: 
-
-* `basic`: sample with HTTP Basic authentication, static HTML and an API resource all in the same server (http://spring.io/blog/2015/01/12/spring-and-angular-js-a-secure-single-page-application[blog]).
-
-* `single`: adds form authentication, but static HTML and an API resource still in the same server (https://spring.io/blog/2015/01/12/the-login-page-angular-js-and-spring-security-part-ii[blog]).
 
 * `vanilla`: form authentication and static HTML in one server ("ui") and an unprotected backend API resource in another ("resource") (https://spring.io/blog/2015/01/20/the-resource-server-angular-js-and-spring-security-part-iii[blog]).
 
@@ -21,8 +15,6 @@ Contents:
 * `oauth2`: same as "oauth2-vanilla" but JWT tokens (signed, encoded JSON, carrying information about the user and the token grant) and a nice UI with a login screen in the authorization server (blog shared with "oauth2-vanilla").
 
 * `double`: access decisions and multiple UIs. Uses a proxy to sidestep CORS and Spring Session for authentication (would also work with OAuth2) (https://spring.io/blog/2015/03/23/multiple-ui-applications-and-a-gateway-single-page-application-with-spring-and-angular-js-part-vi[blog]).
-
-* `modular`: modular client and "natural" routes. Same as "single" but with a more modular client and also using natural routes (e.g. "/login" instead of "/#/login"). Redirects to login page for unauthenticated user.
 
 There is also a blog covering unit tests in the client, iliustrated with the test code in "basic" and "single".
 

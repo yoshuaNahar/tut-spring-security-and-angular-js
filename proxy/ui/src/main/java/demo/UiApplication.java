@@ -1,7 +1,6 @@
 package demo;
 
 import java.security.Principal;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -22,27 +21,28 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 public class UiApplication {
 
-    @GetMapping("/user")
-    @ResponseBody
-    public Principal user(Principal user) {
-        return user;
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(UiApplication.class, args);
+  }
 
-    @GetMapping(value = "/{path:[^\\.]*}")
-    public String redirect() {
-        return "forward:/";
-    }
+  @GetMapping("/user")
+  @ResponseBody
+  public Principal user(Principal user) {
+    return user;
+  }
 
-    public static void main(String[] args) {
-        SpringApplication.run(UiApplication.class, args);
-    }
+  @GetMapping(value = "/{path:[^\\.]*}")
+  public String redirect() {
+    return "forward:/";
+  }
 
-    @Configuration
-    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-    protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            // @formatter:off
+  @Configuration
+  @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+  protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      // @formatter:off
             http
                 .httpBasic().and()
                 .logout().and()
@@ -53,7 +53,7 @@ public class UiApplication {
                 .csrf()
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
             // @formatter:on
-        }
     }
+  }
 
 }

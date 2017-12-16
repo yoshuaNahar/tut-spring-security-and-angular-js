@@ -3,9 +3,7 @@ package demo;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
-
 import javax.servlet.http.HttpSession;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -22,17 +20,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class UiApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(UiApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(UiApplication.class, args);
+  }
 
-    @Configuration
-    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-    protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+  @GetMapping(value = "/{path:[^\\.]*}")
+  public String redirect() {
+    return "forward:/";
+  }
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            // @formatter:off
+  @GetMapping("/user")
+  @ResponseBody
+  public Principal user(Principal user) {
+    return user;
+  }
+
+  @GetMapping("/token")
+  @ResponseBody
+  public Map<String, String> token(HttpSession session) {
+    return Collections.singletonMap("token", session.getId());
+  }
+
+  @Configuration
+  @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+  protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      // @formatter:off
             http
                 .httpBasic().and()
                 .logout().and()
@@ -42,24 +57,7 @@ public class UiApplication {
                 .csrf()
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
             // @formatter:on
-        }
     }
-
-    @GetMapping(value = "/{path:[^\\.]*}")
-    public String redirect() {
-        return "forward:/";
-    }
-
-    @GetMapping("/user")
-    @ResponseBody
-    public Principal user(Principal user) {
-        return user;
-    }
-
-    @GetMapping("/token")
-    @ResponseBody
-    public Map<String, String> token(HttpSession session) {
-        return Collections.singletonMap("token", session.getId());
-    }
+  }
 
 }

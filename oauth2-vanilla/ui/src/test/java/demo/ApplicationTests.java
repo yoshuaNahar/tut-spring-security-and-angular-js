@@ -15,45 +15,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ApplicationTests {
 
-	@LocalServerPort
-	private int port;
+  @LocalServerPort
+  private int port;
 
-	@Value("${security.oauth2.client.userAuthorizationUri}")
-	private String authorizeUri;
-	
-	private TestRestTemplate template = new TestRestTemplate();
+  @Value("${security.oauth2.client.userAuthorizationUri}")
+  private String authorizeUri;
 
-	@Test
-	public void homePageLoads() {
-		ResponseEntity<String> response = template.getForEntity("http://localhost:"
-				+ port + "/", String.class);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-	}
+  private TestRestTemplate template = new TestRestTemplate();
 
-	@Test
-	public void userEndpointProtected() {
-		ResponseEntity<String> response = template.getForEntity("http://localhost:"
-				+ port + "/user", String.class);
-		assertEquals(HttpStatus.FOUND, response.getStatusCode());
-	}
+  @Test
+  public void homePageLoads() {
+    ResponseEntity<String> response = template.getForEntity("http://localhost:"
+        + port + "/", String.class);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
 
-	@Test
-	public void resourceEndpointProtected() {
-		ResponseEntity<String> response = template.getForEntity("http://localhost:"
-				+ port + "/resource", String.class);
-		assertEquals(HttpStatus.FOUND, response.getStatusCode());
-	}
+  @Test
+  public void userEndpointProtected() {
+    ResponseEntity<String> response = template.getForEntity("http://localhost:"
+        + port + "/user", String.class);
+    assertEquals(HttpStatus.FOUND, response.getStatusCode());
+  }
 
-	@Test
-	public void loginRedirects() {
-		ResponseEntity<String> response = template.getForEntity("http://localhost:"
-				+ port + "/login", String.class);
-		assertEquals(HttpStatus.FOUND, response.getStatusCode());
-		String location = response.getHeaders().getFirst("Location");
-		assertTrue("Wrong location: " + location , location.startsWith(authorizeUri));
-	}
+  @Test
+  public void resourceEndpointProtected() {
+    ResponseEntity<String> response = template.getForEntity("http://localhost:"
+        + port + "/resource", String.class);
+    assertEquals(HttpStatus.FOUND, response.getStatusCode());
+  }
+
+  @Test
+  public void loginRedirects() {
+    ResponseEntity<String> response = template.getForEntity("http://localhost:"
+        + port + "/login", String.class);
+    assertEquals(HttpStatus.FOUND, response.getStatusCode());
+    String location = response.getHeaders().getFirst("Location");
+    assertTrue("Wrong location: " + location, location.startsWith(authorizeUri));
+  }
 
 }

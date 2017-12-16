@@ -3,7 +3,6 @@ package demo;
 import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,6 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @EnableZuulProxy
 public class GatewayApplication {
 
+  public static void main(String[] args) {
+    SpringApplication.run(GatewayApplication.class, args);
+  }
+
   @GetMapping(value = "/{path:[^\\.]*}")
   public String redirect() {
     return "forward:/";
@@ -39,10 +42,6 @@ public class GatewayApplication {
     map.put("name", user.getName());
     map.put("roles", AuthorityUtils.authorityListToSet(((Authentication) user).getAuthorities()));
     return map;
-  }
-
-  public static void main(String[] args) {
-    SpringApplication.run(GatewayApplication.class, args);
   }
 
   @Configuration

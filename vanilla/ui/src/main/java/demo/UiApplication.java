@@ -1,7 +1,6 @@
 package demo;
 
 import java.security.Principal;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -19,27 +18,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class UiApplication {
 
-    @GetMapping(value = "/{path:[^\\.]*}")
-    public String redirect() {
-        return "forward:/";
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(UiApplication.class, args);
+  }
 
-    @RequestMapping("/user")
-    @ResponseBody
-    public Principal user(Principal user) {
-        return user;
-    }
+  @GetMapping(value = "/{path:[^\\.]*}")
+  public String redirect() {
+    return "forward:/";
+  }
 
-    public static void main(String[] args) {
-        SpringApplication.run(UiApplication.class, args);
-    }
+  @RequestMapping("/user")
+  @ResponseBody
+  public Principal user(Principal user) {
+    return user;
+  }
 
-    @Configuration
-    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-    protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            // @formatter:off
+  @Configuration
+  @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+  protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      // @formatter:off
             http
                 .formLogin().loginPage("/login").permitAll().and()
                 .logout().and()
@@ -50,7 +50,7 @@ public class UiApplication {
                 .csrf()
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
             // @formatter:on
-        }
     }
+  }
 
 }
